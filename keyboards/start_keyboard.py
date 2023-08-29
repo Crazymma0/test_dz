@@ -67,10 +67,23 @@ async def new_start_kb():
         "Мой Профиль",
         callback_data="my_profile"
     )
-
-    markup.row(
-        random_profiles_button,
+    reference_button = InlineKeyboardButton(
+        "Реферальная программа",
+        callback_data="reference_menu"
+    )
+    parsing_button = InlineKeyboardButton(
+        "Последние новости",
+        callback_data="news_parsing"
+    )
+    markup.add(
+        random_profiles_button
+    ).add(
         my_profile_button
+
+    ).add(
+        reference_button
+    ).add(
+        parsing_button
     )
     return markup
 
@@ -100,10 +113,40 @@ async def my_profile_detail_keyboard(telegram_id):
     )
     delete_button = InlineKeyboardButton(
         "Удалить Анкету ❌",
-        callback_data=f"delete_form_{telegram_id}"
+        callback_data=f"delete_form"
     )
     markup.row(
         update_button,
         delete_button
+    )
+    return markup
+
+
+async def my_profile_create_form_keyboard():
+    markup = InlineKeyboardMarkup(row_width=2)
+    update_button = InlineKeyboardButton(
+        "Registration 💡",
+        callback_data="signup"
+    )
+    pass_button = InlineKeyboardButton(
+        "Pass ❓",
+        callback_data="pass_creation"
+    )
+    markup.row(
+        update_button,
+        pass_button
+    )
+    return markup
+
+
+async def save_news_keyboard(url):
+    markup = InlineKeyboardMarkup()
+    print(url)
+    save_button = InlineKeyboardButton(
+        "Save 💡",
+        callback_data=f"save_"
+    )
+    markup.row(
+        save_button,
     )
     return markup

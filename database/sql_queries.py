@@ -5,9 +5,19 @@ CREATE_USER_TABLE_QUERY = """
         USERNAME CHAR(50),        
         FIRST_NAME CHAR(50),        
         LAST_NAME CHAR(50),
+        REFERENCE_LINK TEXT NULL,
         UNIQUE (TELEGRAM_ID)
         )
 """
+
+CREATE_REFERENCE_USERS_TABLE_QUERY = """
+        CREATE TABLE IF NOT EXISTS reference_users
+        (ID INTEGER PRIMARY KEY,
+        OWNER_TELEGRAM_ID INTEGER,
+        REFERRAL_TELEGRAM_ID INTEGER      
+        )
+"""
+
 CREATE_USER_FORM_QUERY = """
         CREATE TABLE IF NOT EXISTS user_form
         (ID INTEGER PRIMARY KEY,
@@ -29,7 +39,7 @@ CREATE_FORM_LIKE_QUERY = """
         )
 
 """
-START_INSERT_USER_QUERY = """INSERT OR IGNORE INTO telegram_users VALUES (?,?,?,?,?)"""
+START_INSERT_USER_QUERY = """INSERT OR IGNORE INTO telegram_users VALUES (?,?,?,?,?,?)"""
 
 SELECT_USER_QUERY = """SELECT telegram_id, username, first_name FROM telegram_users"""
 
@@ -51,3 +61,15 @@ UPDATE user_form SET NICKNAME = ?, AGE = ?, BIO = ?, PHOTO = ? WHERE TELEGRAM_ID
 DELETE_USER_FORM_QUERY = """
 DELETE FROM user_form WHERE TELEGRAM_ID = ?
 """
+
+SELECT_EXISTED_LINK_QUERY = """
+SELECT REFERENCE_LINK FROM telegram_users WHERE TELEGRAM_ID = ?"""
+
+UPDATE_USER_BY_LINK_QUERY = """
+UPDATE telegram_users SET REFERENCE_LINK = ? WHERE TELEGRAM_ID = ?
+"""
+
+SELECT_LINK_OWNER_QUERY = """
+SELECT TELEGRAM_ID FROM telegram_users WHERE REFERENCE_LINK = ?"""
+
+INSERT_REFERENCE_USERS_QUERY = """INSERT OR IGNORE INTO reference_users VALUES (?,?,?)"""

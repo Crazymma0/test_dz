@@ -55,7 +55,7 @@ async def load_bio(message: types.Message,
 async def load_photo(message: types.Message,
                      state: FSMContext):
     path = await message.photo[-1].download(
-        destination_dir="/Users/Admin/PycharmProjects"
+        destination_dir="/Users/adiletsaparbek/PycharmProjects/geek_32_1/media"
     )
 
     async with state.proxy() as data:

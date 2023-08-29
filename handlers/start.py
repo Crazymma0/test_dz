@@ -1,18 +1,32 @@
 import random
 import re
 
+from aiogram.utils.deep_linking import _create_link
+
 from config import bot
 from aiogram import types, Dispatcher
 from database.sql_commands import Database
 from const import START_MENU_TEXT
 from keyboards.start_keyboard import (
+    # start_kb,
     admin_select_user_keyboard, new_start_kb, like_dislike_profiles_keyboard
 )
 
 
 async def start_button(message: types.Message):
     print(message)
-    Database().sql_insert_users(
+    token = message.get_full_command()
+    if token[1]:
+        print(token[1])
+        link = await _create_link(link_type="start", payload=token[1])
+        owner = Database().select_owner_link_command(link=link)
+        print(owner)
+        Database().sql_insert_reference_users_command(
+            owner_telegram_id=owner[0]['telegram-id'],
+            reference_telegram_id=message.from_user.id
+        )
+
+    await Database().sql_insert_users(
         telegram_id=message.from_user.id,
         username=message.from_user.username,
         first_name=message.from_user.first_name,
@@ -25,7 +39,8 @@ async def start_button(message: types.Message):
     #         caption=START_MENU_TEXT,
     #         reply_markup=await start_kb()
     #     )
-    with open("/Users/Admin/Downloads/BelatedAcrobaticBear-size_restricted.gif", "rb") as animation:
+    with open("/Users/adiletsaparbek/PycharmProjects/geek_32_1/media/dostbot_animation.gif",
+              "rb") as animation:
         await bot.send_animation(
             chat_id=message.chat.id,
             animation=animation,
@@ -100,4 +115,3 @@ def register_start_handlers(dp: Dispatcher):
     dp.register_message_handler(secret_word, lambda word: "dorei" in word.text)
     dp.register_callback_query_handler(random_profiles, lambda call: call.data == "random_profiles")
     dp.register_callback_query_handler(like_call, lambda call: "like_" in call.data)
-

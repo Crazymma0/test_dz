@@ -1,20 +1,14 @@
 from aiogram.utils import executor
 from config import dp
+from database import sql_commands
 from handlers import start, chat_actions, callback, fsm_form
-from database.sql_commands import Database
-
-
-async def on_start_up(_):
-    db = Database()
+async def onstart_up(_):
+    db = sql_commands.Database()
     db.sql_create_db()
+start.register_start_handlers(dp)
+fsm_form.register_fsm_form_handlers(dp)
+callback.register_callback_handlers(dp)
+chat_actions.register_chat_actions_handlers(dp)
 
-
-start.register_start_handlers(dp=dp)
-callback.register_callback_handlers(dp=dp)
-fsm_form.register_fsm_form_handlers(dp=dp)
-chat_actions.register_chat_actions_handlers(dp=dp)
-
-if __name__ == "__main__":
-    executor.start_polling(dp,
-                           skip_updates=True,
-                           on_startup=on_start_up)
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True, on_startup=onstart_up)
